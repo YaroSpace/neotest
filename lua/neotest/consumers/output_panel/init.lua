@@ -25,7 +25,11 @@ local init = function(client)
     if partial then
       return
     end
-    if not chan then
+
+    local channel_is_valid = function(chan_id)
+      return chan_id and pcall(vim.api.nvim_chan_send, chan_id, "\n")
+    end
+    if not channel_is_valid(chan) then
       chan = lib.ui.open_term(panel.win:buffer())
       -- neovim sometimes adds random blank lines when creating a terminal buffer
       nio.api.nvim_buf_set_option(panel.win:buffer(), "modifiable", true)
